@@ -2,7 +2,7 @@ name: HISQIS Checker
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Alle 15 Minuten
+    - cron: '*/1 * * * *'  # Alle 1 Minuten
   workflow_dispatch:
 
 jobs:
