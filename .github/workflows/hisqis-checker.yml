@@ -2,12 +2,18 @@ name: HISQIS Checker
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/15 * * * *"  # alle 15 Minuten
   workflow_dispatch:
 
 jobs:
   check-hisqis:
     runs-on: ubuntu-latest
+
+    env:
+      HISQIS_USERNAME: ${{ secrets.HISQIS_USERNAME }}
+      HISQIS_PASSWORD: ${{ secrets.HISQIS_PASSWORD }}
+      PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
+      PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
 
     steps:
       - name: Checkout repo
@@ -16,19 +22,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run HISQIS Checker
-        env:
-          env:
-            HISQIS_USERNAME: ${{ secrets.HISQIS_USERNAME }}
-            HISQIS_PASSWORD: ${{ secrets.HISQIS_PASSWORD }}
-            PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
-            PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
-        run: |
-          python hisqis_checker.py
+        run: python hisqis_checker.py
