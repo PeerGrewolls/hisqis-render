@@ -2,21 +2,15 @@ name: HISQIS Checker
 
 on:
   schedule:
-    - cron: "*/15 * * * *"  # alle 15 Minuten
+    - cron: '*/15 * * * *'  # Alle 15 Minuten
   workflow_dispatch:
 
 jobs:
-  check-hisqis:
+  check_hisqis:
     runs-on: ubuntu-latest
 
-    env:
-      HISQIS_USERNAME: ${{ secrets.HISQIS_USERNAME }}
-      HISQIS_PASSWORD: ${{ secrets.HISQIS_PASSWORD }}
-      PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
-      PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
-
     steps:
-      - name: Checkout repo
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -24,8 +18,25 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Restore last_hash.txt cache
+        uses: actions/cache@v3
+        with:
+          path: last_hash.txt
+          key: last-hash
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Run HISQIS Checker
         run: python hisqis_checker.py
+        env:
+          HISQIS_USERNAME: ${{ secrets.HISQIS_USERNAME }}
+          HISQIS_PASSWORD: ${{ secrets.HISQIS_PASSWORD }}
+          PUSHOVER_USER_KEY: ${{ secrets.PUSHOVER_USER_KEY }}
+          PUSHOVER_API_TOKEN: ${{ secrets.PUSHOVER_API_TOKEN }}
+
+      - name: Save last_hash.txt cache
+        uses: actions/cache@v3
+        with:
+          path: last_hash.txt
+          key: last-hash
