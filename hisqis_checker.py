@@ -24,7 +24,7 @@ def sende_push_benachrichtigung():
         "token": pushover_api_token,
         "user": pushover_user_key,
         "title": "HISQIS Update",
-        "message": "Es gibt eine neue Note auf HISQIS!",
+        "message": "HISQIS wurde geupdated :)",
         "priority": 1
     })
 
